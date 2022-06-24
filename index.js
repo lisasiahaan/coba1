@@ -6,7 +6,7 @@
 
 require('./config')
 const { default: hisokaConnect, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@adiwajshing/baileys")
-const { state, saveState } = useSingleFileAuthState('./hyzer.json')
+const { state, saveState } = useSingleFileAuthState(`./${sessionName}.json`)
 const pino = require('pino')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
@@ -278,7 +278,6 @@ async function startHisoka() {
        * @param {*} options
        */
       hisoka.send5ButLoc = async (jid , text = '' , footer = '', lok, but = [], options = {}) =>{
-       await hisoka.sendPresenceUpdate('composing', m.chat)
        let resize = await hisoka.reSize(lok, 300, 150)
        var template = generateWAMessageFromContent(jid, {
        "templateMessage": {
@@ -338,7 +337,7 @@ async function startHisoka() {
       *@param {*} quoted
       */
         hisoka.sendListMsg = (jid, text = '', footer = '', title = '' , butText = '', sects = [], quoted) => {
-        await hisoka.sendPresenceUpdate('composing', m.chat)
+        this hisoka.sendPresenceUpdate('composing', m.chat)
         let sections = sects
         var listMes = {
         text: text,
@@ -359,7 +358,7 @@ async function startHisoka() {
      * @returns 
      */
         hisoka.send5ButMsg = (jid, text = '' , footer = '', but = []) =>{
-        await hisoka.sendPresenceUpdate('composing', m.chat)
+        this hisoka.sendPresenceUpdate('composing', m.chat)
         let templateButtons = but
         var templateMessage = {
         text: text,
@@ -459,7 +458,7 @@ async function startHisoka() {
      * @param {*} options 
      */
     hisoka.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
-        await hisoka.sendPresenceUpdate('composing', m.chat)
+        this hisoka.sendPresenceUpdate('composing', m.chat)
         let buttonMessage = {
             text,
             footer,
