@@ -91,19 +91,19 @@ if (typeof setting !== 'object') global.db.data.settings[botNumber] = {}
 if (setting) {
 if (!isNumber(setting.status)) setting.status = 0
 if (!('autobio' in setting)) setting.autobio = false
-if (!('templateImage' in setting)) setting.templateImage = true
+if (!('templateImage' in setting)) setting.templateImage = false
 if (!('templateVideo' in setting)) setting.templateVideo = false
 if (!('templateGif' in setting)) setting.templateGif = false
 if (!('templateMsg' in setting)) setting.templateMsg = false
-if (!('templateLocation' in setting)) setting.templateLocation = false
+if (!('templateLocation' in setting)) setting.templateLocation = true
 } else global.db.data.settings[botNumber] = {
 status: 0,
 autobio: false,
-templateImage: true,
+templateImage: false,
 templateVideo: false,
 templateGif: false,
 templateMsg: false,
-templateLocation: false,
+templateLocation: true,
 }
 
 } catch (err) {
@@ -150,6 +150,31 @@ let hyzercode = list[Math.floor(list.length * Math.random())]
 await hisoka.sendPresenceUpdate(hyzercode, m.chat)
 }
 
+// Ucapan
+const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')
+if(time2 < "23:59:00"){
+var ucapanWaktu = 'Selamat Malam'
+                                        }
+if(time2 < "19:00:00"){
+var ucapanWaktu = 'Selamat Petang'
+                                         }
+if(time2 < "18:00:00"){
+var ucapanWaktu = 'Selamat Sore'
+                                         }
+if(time2 < "15:00:00"){
+var ucapanWaktu = 'Selamat Siang'
+                                         }
+if(time2 < "11:00:00"){
+var ucapanWaktu = 'Selamat Pagi'
+                                         }
+if(time2 < "05:00:00"){
+var ucapanWaktu = 'Selamat Malam'
+                                         }
+                                  
+// readmore
+const more = String.fromCharCode(8206)
+const readmore = more.repeat(4001)
+
   // Anti Link
 if (db.data.chats[m.chat].antilink) {
 if (budy.match(`chat.whatsapp.com`)) {
@@ -165,10 +190,10 @@ hisoka.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
 }
 }
 
-  // Mute Chat
-  if (db.data.chats[m.chat].mute && !isAdmins && !isCreator) {
-  return
-  }
+// Mute Chat
+if (db.data.chats[m.chat].mute && !isAdmins && !isCreator) {
+return
+}
 
 // Respon Cmd with media
 if (isMedia && m.msg.fileSha256 && (m.msg.fileSha256.toString('base64') in global.db.data.sticker)) {
@@ -449,6 +474,372 @@ user.afkReason = ''
 }
 
 switch(command) {
+case 'list': case 'menu': case 'help': case '?': {
+anu = `
+${ucapanWaktu} ${m.pushName} 
+
+[ INFO BOT ]
+▸ Name: Shiro Bot
+▸ Version: 2.6.1
+▸ Library: Baileys Multi-Device
+▸ Runtime: ${runtime(process.uptime())}
+▸ Creator: HyzerDev Official
+
+[ INFO USER ]
+▸ Nama:  ${m.pushName} 
+▸ Api: wa.me/${m.sender}
+▸ Status: Free
+
+_Harap dipahami, bot ini menggunakan program_
+_beta multi device whatsapp._
+_jika kamu menemukan semacam bug/error saat_
+_penggunaan bot. Harap lapor owner bot_
+_agar segera diperbaiki, terima kasih._
+${readmore}
+
+*GROUP MENU*
+• ${prefix}linkgroup
+• ${prefix}ephemeral <option>
+• ${prefix}setppgc <image>
+• ${prefix}setname <text>
+• ${prefix}setdesc <text>
+• ${prefix}group <option>
+• ${prefix}editinfo <option>
+• ${prefix}add @user
+• ${prefix}kick @user
+• ${prefix}hidetag <text>
+• ${prefix}tagall <text>
+• ${prefix}totag <reply>
+• ${prefix}antilink (on/off)
+• ${prefix}mute (on/off)
+• ${prefix}promote @user
+• ${prefix}demote @user
+• ${prefix}vote <text>
+• ${prefix}devote
+• ${prefix}upvote
+• ${prefix}cekvote
+• ${prefix}hapusvote
+
+*WEBZONE MENU*
+• ${prefix}playstore
+• ${prefix}gsmarena
+• ${prefix}jadwalbioskop
+• ${prefix}nowplayingbioskop
+• ${prefix}aminio
+• ${prefix}wattpad
+• ${prefix}webtoons
+• ${prefix}drakor
+
+*DOWNLOADER MENU*
+• ${prefix}tiktoknowm <url>
+• ${prefix}tiktokwm <url>
+• ${prefix}tiktokmp3 <url>
+• ${prefix}instagram <url>
+• ${prefix}twitter <url>
+• ${prefix}twittermp3 <url>
+• ${prefix}facebook <url>
+• ${prefix}pinterestdl <url>
+• ${prefix}ytmp3 <url>
+• ${prefix}ytmp4 <url>
+• ${prefix}getmusic <query>
+• ${prefix}getvideo <query>
+• ${prefix}umma <url>
+• ${prefix}joox <query>
+• ${prefix}soundcloud <url>
+
+*SEARCH MENU*
+• ${prefix}play <query>
+• ${prefix}yts <query>
+• ${prefix}google <query>
+• ${prefix}gimage <query>
+• ${prefix}pinterest <query>
+• ${prefix}wallpaper <query>
+• ${prefix}wikimedia <query>
+• ${prefix}ytsearch <query>
+• ${prefix}ringtone <query>
+• ${prefix}stalk <option> <query>
+
+*RANDOM MENU*
+• ${prefix}coffe
+• ${prefix}quotesanime
+• ${prefix}motivasi
+• ${prefix}dilanquote
+• ${prefix}bucinquote
+• ${prefix}katasenja
+• ${prefix}puisi
+• ${prefix}couple
+• ${prefix}anime
+• ${prefix}waifu
+• ${prefix}husbu
+• ${prefix}neko
+• ${prefix}shinobu
+• ${prefix}waifus (nsfw)
+• ${prefix}nekos (nsfw)
+• ${prefix}trap (nsfw)
+• ${prefix}blowjob (nsfw)
+
+*TEXT PRO MENU*
+• ${prefix}3dchristmas
+• ${prefix}3ddeepsea
+• ${prefix}americanflag
+• ${prefix}3dscifi
+• ${prefix}3drainbow
+• ${prefix}3dwaterpipe
+• ${prefix}halloweenskeleton
+• ${prefix}sketch
+• ${prefix}bluecircuit
+• ${prefix}space
+• ${prefix}metallic
+• ${prefix}fiction
+• ${prefix}greenhorror
+• ${prefix}transformer
+• ${prefix}berry
+• ${prefix}thunder
+• ${prefix}magma
+• ${prefix}3dcrackedstone
+• ${prefix}3dneonlight
+• ${prefix}impressiveglitch
+• ${prefix}naturalleaves
+• ${prefix}fireworksparkle
+• ${prefix}matrix
+• ${prefix}dropwater
+• ${prefix}harrypotter
+• ${prefix}foggywindow
+• ${prefix}neondevils
+• ${prefix}christmasholiday
+• ${prefix}3dgradient
+• ${prefix}blackpink
+• ${prefix}gluetext
+
+*PHOTO OXY MENU*
+• ${prefix}shadow
+• ${prefix}romantic
+• ${prefix}smoke
+• ${prefix}burnpapper
+• ${prefix}naruto
+• ${prefix}lovemsg
+• ${prefix}grassmsg
+• ${prefix}lovetext
+• ${prefix}coffecup
+• ${prefix}butterfly
+• ${prefix}harrypotter
+• ${prefix}retrolol
+
+*EPHOTO MENU*
+• ${prefix}ffcover
+• ${prefix}crossfire
+• ${prefix}galaxy
+• ${prefix}glass
+• ${prefix}neon
+• ${prefix}beach
+• ${prefix}blackpink
+• ${prefix}igcertificate
+• ${prefix}ytcertificate
+
+*FUN MENU*
+• ${prefix}simih
+• ${prefix}halah
+• ${prefix}hilih
+• ${prefix}huluh
+• ${prefix}heleh
+• ${prefix}holoh
+• ${prefix}jadian
+• ${prefix}jodohku
+• ${prefix}delttt
+• ${prefix}tictactoe
+• ${prefix}family100
+• ${prefix}tebak <option>
+• ${prefix}math [mode]
+• ${prefix}suitpvp [@tag]
+
+*PRIMBON MENU*
+• ${prefix}nomorhoki
+• ${prefix}artimimpi
+• ${prefix}artinama
+• ${prefix}ramaljodoh
+• ${prefix}ramaljodohbali
+• ${prefix}suamiistri
+• ${prefix}ramalcinta
+• ${prefix}cocoknama
+• ${prefix}pasangan
+• ${prefix}jadiannikah
+• ${prefix}sifatusaha
+• ${prefix}rezeki
+• ${prefix}pekerjaan
+• ${prefix}nasib
+• ${prefix}penyakit
+• ${prefix}tarot
+• ${prefix}fengshui
+• ${prefix}haribaik
+• ${prefix}harisangar
+• ${prefix}harisial
+• ${prefix}nagahari
+• ${prefix}arahrezeki
+• ${prefix}peruntungan
+• ${prefix}weton
+• ${prefix}karakter
+• ${prefix}keberuntungan
+• ${prefix}memancing
+• ${prefix}masasubur
+• ${prefix}zodiak
+• ${prefix}shio
+
+*CONVERT MENU*
+• ${prefix}attp
+• ${prefix}ttp
+• ${prefix}toimage
+• ${prefix}removebg
+• ${prefix}sticker
+• ${prefix}stickerwm
+• ${prefix}emojimix
+• ${prefix}emojimix2
+• ${prefix}tovideo
+• ${prefix}togif
+• ${prefix}tourl
+• ${prefix}tovn
+• ${prefix}tomp3
+• ${prefix}toaudio
+• ${prefix}ebinary
+• ${prefix}dbinary
+• ${prefix}styletext
+• ${prefix}smeme
+
+*ANIME MENU*
+• ${prefix}akira
+• ${prefix}akiyama
+• ${prefix}anna
+• ${prefix}asuna
+• ${prefix}ayuzawa
+• ${prefix}boruto
+• ${prefix}chitoge
+• ${prefix}chiho
+• ${prefix}deidara
+• ${prefix}erza
+• ${prefix}elaina
+• ${prefix}eba
+• ${prefix}emilia
+• ${prefix}hestia
+• ${prefix}hinata
+• ${prefix}inori
+• ${prefix}isuzu
+• ${prefix}itachi
+• ${prefix}itori
+• ${prefix}kaga
+• ${prefix}kagura
+• ${prefix}kaori
+• ${prefix}keneki
+• ${prefix}kotori
+• ${prefix}kurumi
+• ${prefix}madara
+• ${prefix}mikasa
+• ${prefix}miku
+• ${prefix}minato
+• ${prefix}naruto
+• ${prefix}nezuko
+• ${prefix}sagiri
+• ${prefix}sasuke
+• ${prefix}sakura
+
+*MAIN MENU*
+• ${prefix}ping
+• ${prefix}owner
+• ${prefix}menu / ${prefix}help / ${prefix}?
+• ${prefix}delete
+• ${prefix}infochat
+• ${prefix}quoted
+• ${prefix}listpc
+• ${prefix}listgc
+• ${prefix}listonline
+• ${prefix}speedtest
+
+*DATABASE MENU*
+• ${prefix}setcmd
+• ${prefix}listcmd
+• ${prefix}delcmd
+• ${prefix}lockcmd
+• ${prefix}addmsg
+• ${prefix}listmsg
+• ${prefix}getmsg
+• ${prefix}delmsg
+
+*ANONYMOUS MENU*
+• ${prefix}anonymous
+• ${prefix}start
+• ${prefix}next
+• ${prefix}keluar
+
+*ISLAMIC MENU*
+• ${prefix}iqra
+• ${prefix}hadist
+• ${prefix}alquran
+• ${prefix}juzamma
+• ${prefix}tafsirsurah
+
+*VOICE CHANGER*
+• ${prefix}bass
+• ${prefix}blown
+• ${prefix}deep
+• ${prefix}earrape
+• ${prefix}fast
+• ${prefix}fat
+• ${prefix}nightcore
+• ${prefix}reverse
+• ${prefix}robot
+• ${prefix}slow
+• ${prefix}tupai
+
+*OWNER MENU*
+• ${prefix}react <emoji>
+• ${prefix}chat <option>
+• ${prefix}join <link>
+• ${prefix}leave
+• ${prefix}block @user
+• ${prefix}unblock @user
+• ${prefix}bcgroup <text>
+• ${prefix}bcall <text>
+• ${prefix}setppbot <image>
+• ${prefix}setexif
+• ${prefix}setmenu <option>`
+let btn = [{
+urlButton: {
+displayText: 'Group Shiro Bot',
+url: 'bit.ly/AnyaBot-Group'
+}
+}, {
+callButton: {
+displayText: 'Number Phone Owner',
+phoneNumber: '+62 878-9271-1054'
+}
+}, {
+quickReplyButton: {
+displayText: 'Status Bot',
+id: 'ping'
+}
+}, {
+quickReplyButton: {
+displayText: 'Contact Owner',
+id: 'owner'
+}  
+}, {
+quickReplyButton: {
+displayText: 'Script',
+id: 'sc'
+}
+}]
+ let setbot = db.data.settings[botNumber]
+if (setbot.templateImage) {
+hisoka.send5ButImg(m.chat, anu, hisoka.user.name, global.thumb, btn, global.thumb)
+} else if (setbot.templateGif) {
+hisoka.send5ButGif(m.chat, anu, hisoka.user.name, global.visoka, btn, global.thumb)
+} else if (setbot.templateVid) {
+hisoka.send5ButVid(m.chat, anu, hisoka.user.name, global.visoka, btn, global.thumb)
+} else if (setbot.templateMsg) {
+hisoka.send5ButMsg(m.chat, anu, hisoka.user.name, btn)
+} else if (setbot.templateLocation) {
+hisoka.send5ButLoc(m.chat, anu, hisoka.user.name, global.thumb, btn)
+}
+}
+break
 case 'afk': {
 let user = global.db.data.users[m.sender]
 user.afkTime = + new Date
@@ -865,14 +1256,14 @@ if (!isAdmins) throw mess.admin
 hisoka.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
 }
 break
-   case 'totag': {
-   if (!m.isGroup) throw mess.group
-   if (!isBotAdmins) throw mess.botAdmin
-   if (!isAdmins) throw mess.admin
-   if (!m.quoted) throw `Reply pesan dengan caption ${prefix + command}`
-   hisoka.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
-   }
-   break
+case 'totag': {
+if (!m.isGroup) throw mess.group
+if (!isBotAdmins) throw mess.botAdmin
+if (!isAdmins) throw mess.admin
+if (!m.quoted) throw `Reply pesan dengan caption ${prefix + command}`
+hisoka.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
+}
+break
 case 'style': case 'styletext': {
 if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply(mess.endLimit) // respon ketika limit habis
 db.data.users[m.sender].limit -= 1 // -1 limit
@@ -886,7 +1277,7 @@ teks += `⭔ *${i.name}* : ${i.result}\n\n`
 m.reply(teks)
 }
 break
-   case 'vote': {
+case 'vote': {
 if (!m.isGroup) throw mess.group
 if (m.chat in vote) throw `_Masih ada vote di chat ini!_\n\n*${prefix}hapusvote* - untuk menghapus vote`
 if (!text) throw `Masukkan Alasan Melakukan Vote, Example: *${prefix + command} Owner Ganteng*`
@@ -969,7 +1360,7 @@ mentions: menvote
  }
 hisoka.sendMessage(m.chat, buttonMessageUpvote)
 }
- break
+break
 case 'devote': {
 if (!m.isGroup) throw mess.group
 if (!(m.chat in vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${prefix}vote* - untuk memulai vote`
@@ -1166,6 +1557,32 @@ if (!m.quoted) throw false
 let { chat, fromMe, id, isBaileys } = m.quoted
 if (!isBaileys) throw 'Pesan tersebut bukan dikirim oleh bot!'
 hisoka.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: true, id: m.quoted.id, participant: m.quoted.sender } })
+}
+break
+case 'akira': case 'akiyama': case 'anna': case 'asuna': case 'ayuzawa': case 'boruto': case 'chiho': case 'chitoge': case 'deidara': case 'erza': case 'elaina': case 'eba': case 'emilia': case 'hestia': case 'hinata': case 'inori': case 'isuzu': case 'itachi': case 'itori': case 'kaga': case 'kagura': case 'kaori': case 'keneki': case 'kotori': case 'kurumi': case 'madara': case 'mikasa': case 'miku': case 'minato': case 'naruto': case 'nezuko': case 'sagiri': case 'sasuke': case 'sakura': case 'cosplay': {
+m.reply(mess.wait)
+let hyzermeq = `https://api-reysekha.herokuapp.com/api/wallpaper/${command}?apikey=APIKEY`
+let buttons = [
+{buttonId: `.${command}`, buttonText: {displayText: 'Next Image'}, type: 1}
+]
+let buttonMessage = {
+image: { url: hyzermeq },
+caption: `Generate Random Image ${command}`,
+footer: "ꜱʜɪʀᴏʙᴏᴛ",
+buttons: buttons,
+headerType: 4,
+contextInfo:{externalAdReply:{
+title: "Shiro Bot - Hyzer Official",
+mediaType: 1,
+renderLargerThumbnail: true , 
+showAdAttribution: true, 
+jpegThumbnail: fs.readFileSync('./hyzer.jpg'),
+mediaUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP", 
+thumbnail: fs.readFileSync('./hyzer.jpg'),
+sourceUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP"
+}}
+}
+hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
 case 'bcgc': case 'bcgroup': {
@@ -1573,7 +1990,17 @@ caption: `
 ⭔ Url : ${anu.url}`,
 footer: hisoka.user.name,
 buttons: buttons,
-headerType: 4
+headerType: 4,
+contextInfo:{externalAdReply:{
+title: "Shiro Bot - Hyzer Official",
+mediaType: 1,
+renderLargerThumbnail: true , 
+showAdAttribution: true, 
+jpegThumbnail: fs.readFileSync('./hyzer.jpg'),
+mediaUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP", 
+thumbnail: fs.readFileSync('./hyzer.jpg'),
+sourceUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP"
+}}
 }
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
@@ -1585,7 +2012,14 @@ let quality = args[1] ? args[1] : '128kbps'
 let media = await yta(text, quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
 hisoka.sendImage(m.chat, media.thumb, `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '128kbps'}`, m)
-hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, { quoted: m })
+hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, contextInfo:{externalAdReply:{
+title:"©ꜱʜɪʀᴏʙᴏᴛ",
+body:"Hyzer Official Bot WhatsApp",
+thumbnail: global.thumb,
+mediaType:1,
+mediaUrl: "https://github.com/Hyzerr",
+sourceUrl: "https://github.com/Hyzerr"
+}}}, {quoted:m})
 }
 break
 case 'ytmp4': case 'ytvideo': {
@@ -2740,7 +3174,7 @@ break
 case 'setmenu': {
 if (!isCreator) throw mess.owner
 let setbot = db.data.settings[botNumber]
-   if (args[0] === 'templateImage'){
+if (args[0] === 'templateImage'){
 setbot.templateImage = true
 setbot.templateVideo = false
 setbot.templateGif = false
@@ -2791,314 +3225,6 @@ rows: [
 hisoka.sendListMsg(m.chat, `Please select the menu you want to change!`, hisoka.user.name, `Hello Owner !`, `Click Here`, sections, m)
 }
 }
-break
-case 'list': case 'menu': case 'help': case '?': {
-anu = `*GROUP MENU*
-• ${prefix}linkgroup
-• ${prefix}ephemeral <option>
-• ${prefix}setppgc <image>
-• ${prefix}setname <text>
-• ${prefix}setdesc <text>
-• ${prefix}group <option>
-• ${prefix}editinfo <option>
-• ${prefix}add @user
-• ${prefix}kick @user
-• ${prefix}hidetag <text>
-• ${prefix}tagall <text>
-• ${prefix}totag [reply]
-• ${prefix}antilink [on/off]
-• ${prefix}mute [on/off]
-• ${prefix}promote @user
-• ${prefix}demote @user
-• ${prefix}vote <text>
-• ${prefix}devote
-• ${prefix}upvote
-• ${prefix}cekvote
-• ${prefix}hapusvote
-
-*WEBZONE MENU*
-• ${prefix}playstore
-• ${prefix}gsmarena
-• ${prefix}jadwalbioskop
-• ${prefix}nowplayingbioskop
-• ${prefix}aminio
-• ${prefix}wattpad
-• ${prefix}webtoons
-• ${prefix}drakor
-
-*DOWNLOADER MENU*
-• ${prefix}tiktoknowm [url]
-• ${prefix}tiktokwm [url]
-• ${prefix}tiktokmp3 [url]
-• ${prefix}instagram [url]
-• ${prefix}twitter [url]
-• ${prefix}twittermp3 [url]
-• ${prefix}facebook [url]
-• ${prefix}pinterestdl [url]
-• ${prefix}ytmp3 [url]
-• ${prefix}ytmp4 [url]
-• ${prefix}getmusic [query]
-• ${prefix}getvideo [query]
-• ${prefix}umma [url]
-• ${prefix}joox [query]
-• ${prefix}soundcloud [url]
-
-*SEARCH MENU*
-• ${prefix}play [query]
-• ${prefix}yts [query]
-• ${prefix}google [query]
-• ${prefix}gimage [query]
-• ${prefix}pinterest [query]
-• ${prefix}wallpaper [query]
-• ${prefix}wikimedia [query]
-• ${prefix}ytsearch [query]
-• ${prefix}ringtone [query]
-• ${prefix}stalk <option> [query]
-
-*RANDOM MENU*
-• ${prefix}coffe
-• ${prefix}quotesanime
-• ${prefix}motivasi
-• ${prefix}dilanquote
-• ${prefix}bucinquote
-• ${prefix}katasenja
-• ${prefix}puisi
-• ${prefix}couple
-• ${prefix}anime
-• ${prefix}waifu
-• ${prefix}husbu
-• ${prefix}neko
-• ${prefix}shinobu
-• ${prefix}waifus (nsfw)
-• ${prefix}nekos (nsfw)
-• ${prefix}trap (nsfw)
-• ${prefix}blowjob (nsfw)
-
-*TEXT PRO MENU*
-• ${prefix}3dchristmas
-• ${prefix}3ddeepsea
-• ${prefix}americanflag
-• ${prefix}3dscifi
-• ${prefix}3drainbow
-• ${prefix}3dwaterpipe
-• ${prefix}halloweenskeleton
-• ${prefix}sketch
-• ${prefix}bluecircuit
-• ${prefix}space
-• ${prefix}metallic
-• ${prefix}fiction
-• ${prefix}greenhorror
-• ${prefix}transformer
-• ${prefix}berry
-• ${prefix}thunder
-• ${prefix}magma
-• ${prefix}3dcrackedstone
-• ${prefix}3dneonlight
-• ${prefix}impressiveglitch
-• ${prefix}naturalleaves
-• ${prefix}fireworksparkle
-• ${prefix}matrix
-• ${prefix}dropwater
-• ${prefix}harrypotter
-• ${prefix}foggywindow
-• ${prefix}neondevils
-• ${prefix}christmasholiday
-• ${prefix}3dgradient
-• ${prefix}blackpink
-• ${prefix}gluetext
-
-*PHOTO OXY MENU*
-• ${prefix}shadow
-• ${prefix}romantic
-• ${prefix}smoke
-• ${prefix}burnpapper
-• ${prefix}naruto
-• ${prefix}lovemsg
-• ${prefix}grassmsg
-• ${prefix}lovetext
-• ${prefix}coffecup
-• ${prefix}butterfly
-• ${prefix}harrypotter
-• ${prefix}retrolol
-
-*EPHOTO MENU*
-• ${prefix}ffcover
-• ${prefix}crossfire
-• ${prefix}galaxy
-• ${prefix}glass
-• ${prefix}neon
-• ${prefix}beach
-• ${prefix}blackpink
-• ${prefix}igcertificate
-• ${prefix}ytcertificate
-
-*FUN MENU*
-• ${prefix}simih
-• ${prefix}halah
-• ${prefix}hilih
-• ${prefix}huluh
-• ${prefix}heleh
-• ${prefix}holoh
-• ${prefix}jadian
-• ${prefix}jodohku
-• ${prefix}delttt
-• ${prefix}tictactoe
-• ${prefix}family100
-• ${prefix}tebak <option>
-• ${prefix}math [mode]
-• ${prefix}suitpvp [@tag]
-
-*PRIMBON MENU*
-• ${prefix}nomorhoki
-• ${prefix}artimimpi
-• ${prefix}artinama
-• ${prefix}ramaljodoh
-• ${prefix}ramaljodohbali
-• ${prefix}suamiistri
-• ${prefix}ramalcinta
-• ${prefix}cocoknama
-• ${prefix}pasangan
-• ${prefix}jadiannikah
-• ${prefix}sifatusaha
-• ${prefix}rezeki
-• ${prefix}pekerjaan
-• ${prefix}nasib
-• ${prefix}penyakit
-• ${prefix}tarot
-• ${prefix}fengshui
-• ${prefix}haribaik
-• ${prefix}harisangar
-• ${prefix}harisial
-• ${prefix}nagahari
-• ${prefix}arahrezeki
-• ${prefix}peruntungan
-• ${prefix}weton
-• ${prefix}karakter
-• ${prefix}keberuntungan
-• ${prefix}memancing
-• ${prefix}masasubur
-• ${prefix}zodiak
-• ${prefix}shio
-
-*CONVERT MENU*
-• ${prefix}attp
-• ${prefix}ttp
-• ${prefix}toimage
-• ${prefix}removebg
-• ${prefix}sticker
-• ${prefix}stickerwm
-• ${prefix}emojimix
-• ${prefix}emojimix2
-• ${prefix}tovideo
-• ${prefix}togif
-• ${prefix}tourl
-• ${prefix}tovn
-• ${prefix}tomp3
-• ${prefix}toaudio
-• ${prefix}ebinary
-• ${prefix}dbinary
-• ${prefix}styletext
-• ${prefix}smeme
-
-*MAIN MENU*
-• ${prefix}ping
-• ${prefix}owner
-• ${prefix}menu / ${prefix}help / ${prefix}?
-• ${prefix}delete
-• ${prefix}infochat
-• ${prefix}quoted
-• ${prefix}listpc
-• ${prefix}listgc
-• ${prefix}listonline
-• ${prefix}speedtest
-
-*DATABASE MENU*
-• ${prefix}setcmd
-• ${prefix}listcmd
-• ${prefix}delcmd
-• ${prefix}lockcmd
-• ${prefix}addmsg
-• ${prefix}listmsg
-• ${prefix}getmsg
-• ${prefix}delmsg
-
-*ANONYMOUS MENU*
-• ${prefix}anonymous
-• ${prefix}start
-• ${prefix}next
-• ${prefix}keluar
-
-*ISLAMIC MENU*
-• ${prefix}iqra
-• ${prefix}hadist
-• ${prefix}alquran
-• ${prefix}juzamma
-• ${prefix}tafsirsurah
-
-*VOICE CHANGER*
-• ${prefix}bass
-• ${prefix}blown
-• ${prefix}deep
-• ${prefix}earrape
-• ${prefix}fast
-• ${prefix}fat
-• ${prefix}nightcore
-• ${prefix}reverse
-• ${prefix}robot
-• ${prefix}slow
-• ${prefix}tupai
-
-*OWNER MENU*
-• ${prefix}react <emoji>
-• ${prefix}chat <option>
-• ${prefix}join <link>
-• ${prefix}leave
-• ${prefix}block @user
-• ${prefix}unblock @user
-• ${prefix}bcgroup <text>
-• ${prefix}bcall <text>
-• ${prefix}setppbot <image>
-• ${prefix}setexif
-• ${prefix}setmenu <option>`
-let btn = [{
-urlButton: {
-displayText: 'Group Shiro Bot',
-url: 'bit.ly/AnyaBot-Group'
-}
-}, {
-callButton: {
-displayText: 'Number Phone Owner',
-phoneNumber: '+62 878-9271-1054'
-}
-}, {
-quickReplyButton: {
-displayText: 'Status Bot',
-id: 'ping'
-}
-}, {
-quickReplyButton: {
-displayText: 'Contact Owner',
-id: 'owner'
-}  
-}, {
-quickReplyButton: {
-displayText: 'Script',
-id: 'sc'
-}
-}]
- let setbot = db.data.settings[botNumber]
-if (setbot.templateImage) {
-hisoka.send5ButImg(m.chat, anu, hisoka.user.name, global.thumb, btn, global.thumb)
-} else if (setbot.templateGif) {
-hisoka.send5ButGif(m.chat, anu, hisoka.user.name, global.visoka, btn, global.thumb)
-} else if (setbot.templateVid) {
-hisoka.send5ButVid(m.chat, anu, hisoka.user.name, global.visoka, btn, global.thumb)
-} else if (setbot.templateMsg) {
-hisoka.send5ButMsg(m.chat, anu, hisoka.user.name, btn)
-} else if (setbot.templateLocation) {
-hisoka.send5ButLoc(m.chat, anu, hisoka.user.name, global.thumb, btn)
-}
- }
 break
 default:
 if (budy.startsWith('=>')) {
