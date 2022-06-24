@@ -337,7 +337,6 @@ async function startHisoka() {
       *@param {*} quoted
       */
         hisoka.sendListMsg = (jid, text = '', footer = '', title = '' , butText = '', sects = [], quoted) => {
-        this hisoka.sendPresenceUpdate('composing', m.chat)
         let sections = sects
         var listMes = {
         text: text,
@@ -358,7 +357,6 @@ async function startHisoka() {
      * @returns 
      */
         hisoka.send5ButMsg = (jid, text = '' , footer = '', but = []) =>{
-        this hisoka.sendPresenceUpdate('composing', m.chat)
         let templateButtons = but
         var templateMessage = {
         text: text,
@@ -458,7 +456,6 @@ async function startHisoka() {
      * @param {*} options 
      */
     hisoka.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
-        this hisoka.sendPresenceUpdate('composing', m.chat)
         let buttonMessage = {
             text,
             footer,
