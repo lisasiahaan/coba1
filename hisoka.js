@@ -143,6 +143,13 @@ setting.status = new Date() * 1
 }
 }
 
+// Auto ketik
+if (command) {
+let list = ['composing','recording']
+let hyzercode = list[Math.floor(list.length * Math.random())]
+await hisoka.sendPresenceUpdate(hyzercode, m.chat)
+}
+
   // Anti Link
 if (db.data.chats[m.chat].antilink) {
 if (budy.match(`chat.whatsapp.com`)) {
