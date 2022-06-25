@@ -18,9 +18,9 @@ global.APIKeys = {
 }
 
 // Other
-global.owner = ['6287892711054','6287892711054','6287892711054']
-global.premium = ['6287892711054']
-global.packname = 'Shiro'
+global.owner = ['085803459211']
+global.premium = ['085803459211']
+global.packname = 'Sup bot'
 global.author = 'WhatsApp Bot'
 global.hardi = { url: 'https://hardianto.xyz/api/anime/random?sfw=neko&apikey=hardianto' }
 global.sessionName = 'hisoka'
