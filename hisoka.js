@@ -2012,14 +2012,7 @@ let quality = args[1] ? args[1] : '128kbps'
 let media = await yta(text, quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
 hisoka.sendImage(m.chat, media.thumb, `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '128kbps'}`, m)
-hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, contextInfo:{externalAdReply:{
-title:"©ꜱʜɪʀᴏʙᴏᴛ",
-body:"Hyzer Official Bot WhatsApp",
-thumbnail: global.thumb,
-mediaType:1,
-mediaUrl: "https://github.com/Hyzerr",
-sourceUrl: "https://github.com/Hyzerr"
-}}}, {quoted:m})
+hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, {quoted:m})
 }
 break
 case 'ytmp4': case 'ytvideo': {
