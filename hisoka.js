@@ -1273,8 +1273,8 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 if (!m.quoted) throw `Reply pesan dengan caption ${prefix + command}`
-hisoka.sendPresenceUpdate('composing', m.chat)
-hisoka.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
+await hisoka.sendPresenceUpdate('composing', m.chat)
+await hisoka.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
 }
 break
 case 'style': case 'styletext': {
@@ -1373,6 +1373,7 @@ buttons: buttonsUpvote,
 headerType: 1,
 mentions: menvote
  }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessageUpvote)
 }
 break
@@ -1415,6 +1416,7 @@ buttons: buttonsDevote,
 headerType: 1,
 mentions: menvote
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessageDevote)
 }
 break
@@ -1445,12 +1447,14 @@ ${vote[m.chat][2].map((v, i) => `├ ${i + 1}. @${v.split`@`[0]}`).join('\n')}
 
 ©${hisoka.user.id}
 `
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendTextWithMentions(m.chat, teks_vote, m)
 break
 case 'deletevote': case'delvote': case 'hapusvote': {
 if (!m.isGroup) throw mess.group
 if (!(m.chat in vote)) throw `_*tidak ada voting digrup ini!*_\n\n*${prefix}vote* - untuk memulai vote`
 delete vote[m.chat]
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply('Berhasil Menghapus Sesi Vote Di Grup Ini')
 }
 break
@@ -1467,6 +1471,7 @@ let buttons = [
 { buttonId: 'group open', buttonText: { displayText: 'Open' }, type: 1 },
 { buttonId: 'group close', buttonText: { displayText: 'Close' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, `Mode Group`, hisoka.user.name, m)
 
  }
@@ -1485,6 +1490,7 @@ await hisoka.groupSettingUpdate(m.chat, 'locked').then((res) => m.reply(`Sukses 
 { buttonId: 'editinfo open', buttonText: { displayText: 'Open' }, type: 1 },
 { buttonId: 'editinfo close', buttonText: { displayText: 'Close' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, `Mode Edit Info`, hisoka.user.name, m)
 
 }
@@ -1507,6 +1513,7 @@ m.reply(`Antilink Tidak Aktif !`)
 { buttonId: 'antilink on', buttonText: { displayText: 'On' }, type: 1 },
 { buttonId: 'antilink off', buttonText: { displayText: 'Off' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, `Mode Antilink`, hisoka.user.name, m)
 }
  }
@@ -1528,6 +1535,7 @@ m.reply(`${hisoka.user.name} telah di unmute di group ini !`)
 { buttonId: 'mute on', buttonText: { displayText: 'On' }, type: 1 },
 { buttonId: 'mute off', buttonText: { displayText: 'Off' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, `Mute Bot`, hisoka.user.name, m)
 }
  }
@@ -1536,6 +1544,7 @@ case 'linkgroup': case 'linkgc': {
 if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 let response = await hisoka.groupInviteCode(m.chat)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
 }
 break
@@ -1563,6 +1572,7 @@ rows: [
 ]
 },
 ]
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendListMsg(m.chat, `Please select the following Ephemeral Options List !`, hisoka.user.name, `Hello Admin ${groupMetadata.subject}`, `Click Here`, sections, m)
 }
 }
@@ -1693,6 +1703,7 @@ let waktu = read ? read : unread
 teks += `⭔ @${i.userJid.split('@')[0]}\n`
 teks += ` ┗━⭔ *Waktu :* ${moment(waktu * 1000).format('DD/MM/YY HH:mm:ss')} ⭔ *Status :* ${read ? 'Dibaca' : 'Terkirim'}\n\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendTextWithMentions(m.chat, teks, m)
 }
 break
@@ -1700,6 +1711,7 @@ case 'q': case 'quoted': {
 if (!m.quoted) return m.reply('Reply Pesannya!!')
 let wokwol = await hisoka.serializeM(await m.getQuotedObj())
 if (!wokwol.quoted) return m.reply('Pesan Yang anda reply tidak mengandung reply')
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await wokwol.quoted.copyNForward(m.chat, true)
 }
 break
@@ -1710,6 +1722,7 @@ case 'listpc': {
  let nama = store.messages[i].array[0].pushName
  teks += `⬡ *Nama :* ${nama}\n⬡ *User :* @${i.split('@')[0]}\n⬡ *Chat :* https://wa.me/${i.split('@')[0]}\n\n────────────────────────\n\n`
  }
+ hisoka.sendPresenceUpdate('composing', m.chat)
  hisoka.sendTextWithMentions(m.chat, teks, m)
  }
  break
@@ -1720,12 +1733,14 @@ case 'listgc': {
  let metadata = await hisoka.groupMetadata(i)
  teks += `⬡ *Nama :* ${metadata.subject}\n⬡ *Owner :* ${metadata.owner !== undefined ? '@' + metadata.owner.split`@`[0] : 'Tidak diketahui'}\n⬡ *ID :* ${metadata.id}\n⬡ *Dibuat :* ${moment(metadata.creation * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n⬡ *Member :* ${metadata.participants.length}\n\n────────────────────────\n\n`
  }
+ hisoka.sendPresenceUpdate('composing', m.chat)
  hisoka.sendTextWithMentions(m.chat, teks, m)
  }
  break
  case 'listonline': case 'liston': {
 let id = args && /\d+\-\d+@g.us/.test(args[0]) ? args[0] : m.chat
 let online = [...Object.keys(store.presences[id]), botNumber]
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, 'List Online:\n\n' + online.map(v => '⭔ @' + v.replace(/@.+/, '')).join`\n`, m, { mentions: online })
  }
  break
@@ -1770,6 +1785,7 @@ case 'ebinary': {
 if (!text) throw `Example : ${prefix + command} text`
 let { eBinary } = require('./lib/binary')
 let eb = await eBinary(text)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(eb)
 }
 break
@@ -1777,6 +1793,7 @@ case 'dbinary': {
 if (!text) throw `Example : ${prefix + command} text`
 let { dBinary } = require('./lib/binary')
 let db = await dBinary(text)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(db)
 }
 break
@@ -1802,6 +1819,7 @@ await fs.unlinkSync(encmedia)
 break
    case 'attp': case 'ttp': {
    if (!text) throw `Example : ${prefix + command} text`
+   hisoka.sendPresenceUpdate('composing', m.chat)
    await hisoka.sendMedia(m.chat, `https://xteam.xyz/${command}?file&text=${text}`, 'hisoka', 'morou', m, {asSticker: true})
 
  }
@@ -1824,6 +1842,7 @@ await fs.unlinkSync(FaTiH)
 case 'simih': case 'simisimi': {
 if (!text) throw `Example : ${prefix + command} text`
 hm = await fetchJson(api('zenz', '/api/simisimi', { text : text }, 'apikey'))
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(hm.result.message)
 }
 break
@@ -1837,6 +1856,7 @@ exec(`ffmpeg -i ${media} ${ran}`, (err) => {
 fs.unlinkSync(media)
 if (err) throw err
 let buffer = fs.readFileSync(ran)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: buffer }, { quoted: m })
 fs.unlinkSync(ran)
 })
@@ -1849,6 +1869,7 @@ m.reply(mess.wait)
 let { webp2mp4File } = require('./lib/uploader')
 let media = await hisoka.downloadAndSaveMediaMessage(quoted)
 let webpToMp4 = await webp2mp4File(media)
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendMessage(m.chat, { video: { url: webpToMp4.result, caption: 'Convert Webp To Video' } }, { quoted: m })
 await fs.unlinkSync(media)
 }
@@ -1860,6 +1881,7 @@ m.reply(mess.wait)
 let media = await quoted.download()
 let { toAudio } = require('./lib/converter')
 let audio = await toAudio(media, 'mp4')
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m })
 }
 break
@@ -1871,6 +1893,7 @@ m.reply(mess.wait)
 let media = await quoted.download()
 let { toAudio } = require('./lib/converter')
 let audio = await toAudio(media, 'mp4')
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, {document: audio, mimetype: 'audio/mpeg', fileName: `Convert By ${hisoka.user.name}.mp3`}, { quoted : m })
 }
 break
@@ -1881,6 +1904,7 @@ m.reply(mess.wait)
 let media = await quoted.download()
 let { toPTT } = require('./lib/converter')
 let audio = await toPTT(media, 'mp4')
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, {audio: audio, mimetype:'audio/mpeg', ptt:true }, {quoted:m})
 }
 break
@@ -1891,6 +1915,7 @@ m.reply(mess.wait)
 let { webp2mp4File } = require('./lib/uploader')
 let media = await hisoka.downloadAndSaveMediaMessage(quoted)
 let webpToMp4 = await webp2mp4File(media)
+hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendMessage(m.chat, { video: { url: webpToMp4.result, caption: 'Convert Webp To Video' }, gifPlayback: true }, { quoted: m })
 await fs.unlinkSync(media)
 }
@@ -1904,6 +1929,7 @@ let anu = await TelegraPh(media)
 m.reply(util.format(anu))
 } else if (!/image/.test(mime)) {
 let anu = await UploadFileUgu(media)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(util.format(anu))
 }
 await fs.unlinkSync(media)
@@ -1943,6 +1969,7 @@ let no = 1
 for (let i of search.all) {
 teks += `⭔ No : ${no++}\n⭔ Type : ${i.type}\n⭔ Video ID : ${i.videoId}\n⭔ Title : ${i.title}\n⭔ Views : ${i.views}\n⭔ Duration : ${i.timestamp}\n⭔ Upload At : ${i.ago}\n⭔ Author : ${i.author.name}\n⭔ Url : ${i.url}\n\n─────────────────\n\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: search.all[0].thumbnail },  caption: teks }, { quoted: m })
 }
 break
@@ -1956,6 +1983,7 @@ teks += `⭔ *Title* : ${g.title}\n`
 teks += `⭔ *Description* : ${g.snippet}\n`
 teks += `⭔ *Link* : ${g.link}\n\n────────────────────────\n\n`
 } 
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(teks)
 })
 }
@@ -1978,6 +2006,7 @@ footer: hisoka.user.name,
 buttons: buttons,
 headerType: 4
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 })
 }
@@ -2018,6 +2047,7 @@ thumbnail: fs.readFileSync('./hyzer.jpg'),
 sourceUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP"
 }}
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2037,6 +2067,7 @@ if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFM
 let quality = args[1] ? args[1] : '360p'
 let media = await ytv(text, quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '360p'}` }, { quoted: m })
 }
 break
@@ -2051,6 +2082,7 @@ let quality = args[1] ? args[1] : '128kbps'
 let media = await yta(urls[text - 1], quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
 hisoka.sendImage(m.chat, media.thumb, `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${urls[text - 1]}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '128kbps'}`, m)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, { quoted: m })
 }
 break
@@ -2064,6 +2096,7 @@ if (!urls) throw `Mungkin pesan yang anda reply tidak mengandung result ytsearch
 let quality = args[1] ? args[1] : '360p'
 let media = await ytv(urls[text - 1], quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${urls[text - 1]}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '360p'}` }, { quoted: m })
 }
 break
@@ -2072,11 +2105,13 @@ m.reply(mess.wait)
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(text)
 result = anu[Math.floor(Math.random() * anu.length)]
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: result }, caption: '⭔ Media Url : '+result }, { quoted: m })
 }
 break
 case 'anime': case 'waifu': case 'husbu': case 'neko': case 'shinobu': case 'megumin': case 'waifus': case 'nekos': case 'trap': case 'blowjob': {
 m.reply(mess.wait)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: api('zenz', '/api/random/'+command, {}, 'apikey') }, caption: 'Generate Random ' + command }, { quoted: m })
 }
 break
@@ -2084,6 +2119,7 @@ case 'couple': {
 m.reply(mess.wait)
 let anu = await fetchJson('https://raw.githubusercontent.com/iamriz7/kopel_/main/kopel.json')
 let random = anu[Math.floor(Math.random() * anu.length)]
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: random.male }, caption: `Couple Male` }, { quoted: m })
 hisoka.sendMessage(m.chat, { image: { url: random.female }, caption: `Couple Female` }, { quoted: m })
 }
@@ -2099,6 +2135,7 @@ footer: hisoka.user.name,
 buttons: buttons,
 headerType: 4
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2117,6 +2154,7 @@ footer: hisoka.user.name,
 buttons: buttons,
 headerType: 4
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2135,6 +2173,7 @@ footer: hisoka.user.name,
 buttons: buttons,
 headerType: 4
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2151,6 +2190,7 @@ footer: 'Press The Button Below',
 buttons: buttons,
 headerType: 2
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2165,24 +2205,28 @@ footer: 'Press The Button Below',
 buttons: buttons,
 headerType: 2
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
 case '3dchristmas': case '3ddeepsea': case 'americanflag': case '3dscifi': case '3drainbow': case '3dwaterpipe': case 'halloweenskeleton': case 'sketch': case 'bluecircuit': case 'space': case 'metallic': case 'fiction': case 'greenhorror': case 'transformer': case 'berry': case 'thunder': case 'magma': case '3dcrackedstone': case '3dneonlight': case 'impressiveglitch': case 'naturalleaves': case 'fireworksparkle': case 'matrix': case 'dropwater':  case 'harrypotter': case 'foggywindow': case 'neondevils': case 'christmasholiday': case '3dgradient': case 'blackpink': case 'gluetext': {
 if (!text) throw `Example : ${prefix + command} text`
 m.reply(mess.wait)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: api('zenz', '/textpro/' + command, { text: text }, 'apikey') }, caption: `Text Pro ${command}` }, { quoted: m})
 }
 break
 case 'shadow': case 'romantic': case 'smoke': case 'burnpapper': case 'naruto': case 'lovemsg': case 'grassmsg': case 'lovetext': case 'coffecup': case 'butterfly': case 'harrypotter': case 'retrolol': {
 if (!text) throw 'No Query Text'
 m.reply(mess.wait)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: api('zenz', '/photooxy/' + command, { text: text }, 'apikey') }, caption: `Photo Oxy ${command}` }, { quoted: m })
 }
 break
 case 'ffcover': case 'crossfire': case 'galaxy': case 'glass': case 'neon': case 'beach': case 'blackpink': case 'igcertificate': case 'ytcertificate': {
 if (!text) throw 'No Query Text'
 m.reply(mess.wait)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: api('zenz', '/ephoto/' + command, { text: text }, 'apikey') }, caption: `Ephoto ${command}` }, { quoted: m })
 }
 break
@@ -2190,6 +2234,7 @@ case 'nomerhoki': case 'nomorhoki': {
 if (!Number(text)) throw `Example : ${prefix + command} 6288292024190`
 let anu = await primbon.nomer_hoki(Number(text))
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nomor HP :* ${anu.message.nomer_hp}\n⭔ *Angka Shuzi :* ${anu.message.angka_shuzi}\n⭔ *Energi Positif :*\n- Kekayaan : ${anu.message.energi_positif.kekayaan}\n- Kesehatan : ${anu.message.energi_positif.kesehatan}\n- Cinta : ${anu.message.energi_positif.cinta}\n- Kestabilan : ${anu.message.energi_positif.kestabilan}\n- Persentase : ${anu.message.energi_positif.persentase}\n⭔ *Energi Negatif :*\n- Perselisihan : ${anu.message.energi_negatif.perselisihan}\n- Kehilangan : ${anu.message.energi_negatif.kehilangan}\n- Malapetaka : ${anu.message.energi_negatif.malapetaka}\n- Kehancuran : ${anu.message.energi_negatif.kehancuran}\n- Persentase : ${anu.message.energi_negatif.persentase}`, m)
 }
 break
@@ -2197,6 +2242,7 @@ case 'artimimpi': case 'tafsirmimpi': {
 if (!text) throw `Example : ${prefix + command} belanja`
 let anu = await primbon.tafsir_mimpi(text)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Mimpi :* ${anu.message.mimpi}\n⭔ *Arti :* ${anu.message.arti}\n⭔ *Solusi :* ${anu.message.solusi}`, m)
 }
 break
@@ -2205,6 +2251,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11,
 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
 let anu = await primbon.ramalan_jodoh(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama Anda :* ${anu.message.nama_anda.nama}\n⭔ *Lahir Anda :* ${anu.message.nama_anda.tgl_lahir}\n⭔ *Nama Pasangan :* ${anu.message.nama_pasangan.nama}\n⭔ *Lahir Pasangan :* ${anu.message.nama_pasangan.tgl_lahir}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2213,6 +2260,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11,
 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
 let anu = await primbon.ramalan_jodoh_bali(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama Anda :* ${anu.message.nama_anda.nama}\n⭔ *Lahir Anda :* ${anu.message.nama_anda.tgl_lahir}\n⭔ *Nama Pasangan :* ${anu.message.nama_pasangan.nama}\n⭔ *Lahir Pasangan :* ${anu.message.nama_pasangan.tgl_lahir}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2221,6 +2269,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11,
 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
 let anu = await primbon.suami_istri(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama Suami :* ${anu.message.suami.nama}\n⭔ *Lahir Suami :* ${anu.message.suami.tgl_lahir}\n⭔ *Nama Istri :* ${anu.message.istri.nama}\n⭔ *Lahir Istri :* ${anu.message.istri.tgl_lahir}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2229,6 +2278,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005, Novia, 16, 11,
 let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
 let anu = await primbon.ramalan_cinta(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama Anda :* ${anu.message.nama_anda.nama}\n⭔ *Lahir Anda :* ${anu.message.nama_anda.tgl_lahir}\n⭔ *Nama Pasangan :* ${anu.message.nama_pasangan.nama}\n⭔ *Lahir Pasangan :* ${anu.message.nama_pasangan.tgl_lahir}\n⭔ *Sisi Positif :* ${anu.message.sisi_positif}\n⭔ *Sisi Negatif :* ${anu.message.sisi_negatif}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2236,6 +2286,7 @@ case 'artinama': {
 if (!text) throw `Example : ${prefix + command} Dika Ardianta`
 let anu = await primbon.arti_nama(text)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Arti :* ${anu.message.arti}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2244,6 +2295,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005`
 let [nama, tgl, bln, thn] = text.split`,`
 let anu = await primbon.kecocokan_nama(nama, tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Life Path :* ${anu.message.life_path}\n⭔ *Destiny :* ${anu.message.destiny}\n⭔ *Destiny Desire :* ${anu.message.destiny_desire}\n⭔ *Personality :* ${anu.message.personality}\n⭔ *Persentase :* ${anu.message.persentase_kecocokan}`, m)
 }
 break
@@ -2252,6 +2304,7 @@ if (!text) throw `Example : ${prefix + command} Dika|Novia`
 let [nama1, nama2] = text.split`|`
 let anu = await primbon.kecocokan_nama_pasangan(nama1, nama2)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat,  anu.message.gambar, `⭔ *Nama Anda :* ${anu.message.nama_anda}\n⭔ *Nama Pasangan :* ${anu.message.nama_pasangan}\n⭔ *Sisi Positif :* ${anu.message.sisi_positif}\n⭔ *Sisi Negatif :* ${anu.message.sisi_negatif}`, m)
 }
 break
@@ -2260,6 +2313,7 @@ if (!text) throw `Example : ${prefix + command} 6, 12, 2020`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.tanggal_jadian_pernikahan(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Tanggal Pernikahan :* ${anu.message.tanggal}\n⭔ *karakteristik :* ${anu.message.karakteristik}`, m)
 }
 break
@@ -2268,6 +2322,7 @@ if (!ext)throw `Example : ${prefix+ command} 28, 12, 2021`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.sifat_usaha_bisnis(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Lahir :* ${anu.message.hari_lahir}\n⭔ *Usaha :* ${anu.message.usaha}`, m)
 }
 break
@@ -2276,6 +2331,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.rejeki_hoki_weton(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Lahir :* ${anu.message.hari_lahir}\n⭔ *Rezeki :* ${anu.message.rejeki}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2284,6 +2340,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.pekerjaan_weton_lahir(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Lahir :* ${anu.message.hari_lahir}\n⭔ *Pekerjaan :* ${anu.message.pekerjaan}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2292,6 +2349,7 @@ if (!text) throw `Example : 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.ramalan_nasib(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Analisa :* ${anu.message.analisa}\n⭔ *Angka Akar :* ${anu.message.angka_akar}\n⭔ *Sifat :* ${anu.message.sifat}\n⭔ *Elemen :* ${anu.message.elemen}\n⭔ *Angka Keberuntungan :* ${anu.message.angka_keberuntungan}`, m)
 }
 break
@@ -2300,6 +2358,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.cek_potensi_penyakit(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Analisa :* ${anu.message.analisa}\n⭔ *Sektor :* ${anu.message.sektor}\n⭔ *Elemen :* ${anu.message.elemen}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2308,6 +2367,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.arti_kartu_tarot(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, anu.message.image, `⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Simbol Tarot :* ${anu.message.simbol_tarot}\n⭔ *Arti :* ${anu.message.arti}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2316,6 +2376,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 1, 2005\n\nNote : ${prefix
 let [nama, gender, tahun] = text.split`,`
 let anu = await primbon.perhitungan_feng_shui(nama, gender, tahun)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Lahir :* ${anu.message.tahun_lahir}\n⭔ *Gender :* ${anu.message.jenis_kelamin}\n⭔ *Angka Kua :* ${anu.message.angka_kua}\n⭔ *Kelompok :* ${anu.message.kelompok}\n⭔ *Karakter :* ${anu.message.karakter}\n⭔ *Sektor Baik :* ${anu.message.sektor_baik}\n⭔ *Sektor Buruk :* ${anu.message.sektor_buruk}`, m)
 }
 break
@@ -2324,6 +2385,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.petung_hari_baik(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Kala Tinantang :* ${anu.message.kala_tinantang}\n⭔ *Info :* ${anu.message.info}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2332,6 +2394,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.hari_sangar_taliwangke(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Info :* ${anu.message.info}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2340,6 +2403,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.primbon_hari_naas(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Hari Lahir :* ${anu.message.hari_lahir}\n⭔ *Tanggal Lahir :* ${anu.message.tgl_lahir}\n⭔ *Hari Naas :* ${anu.message.hari_naas}\n⭔ *Info :* ${anu.message.catatan}\n⭔ *Catatan :* ${anu.message.info}`, m)
 }
 break
@@ -2348,6 +2412,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.rahasia_naga_hari(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Hari Lahir :* ${anu.message.hari_lahir}\n⭔ *Tanggal Lahir :* ${anu.message.tgl_lahir}\n⭔ *Arah Naga Hari :* ${anu.message.arah_naga_hari}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2356,6 +2421,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.primbon_arah_rejeki(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Hari Lahir :* ${anu.message.hari_lahir}\n⭔ *tanggal Lahir :* ${anu.message.tgl_lahir}\n⭔ *Arah Rezeki :* ${anu.message.arah_rejeki}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2364,6 +2430,7 @@ if (!text) throw `Example : ${prefix + command} DIka, 7, 7, 2005, 2022\n\nNote :
 let [nama, tgl, bln, thn, untuk] = text.split`,`
 let anu = await primbon.ramalan_peruntungan(nama, tgl, bln, thn, untuk)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Peruntungan Tahun :* ${anu.message.peruntungan_tahun}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2372,6 +2439,7 @@ if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.weton_jawa(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Tanggal :* ${anu.message.tanggal}\n⭔ *Jumlah Neptu :* ${anu.message.jumlah_neptu}\n⭔ *Watak Hari :* ${anu.message.watak_hari}\n⭔ *Naga Hari :* ${anu.message.naga_hari}\n⭔ *Jam Baik :* ${anu.message.jam_baik}\n⭔ *Watak Kelahiran :* ${anu.message.watak_kelahiran}`, m)
 }
 break
@@ -2380,6 +2448,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005`
 let [nama, tgl, bln, thn] = text.split`,`
 let anu = await primbon.sifat_karakter_tanggal_lahir(nama, tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Garis Hidup :* ${anu.message.garis_hidup}`, m)
 }
 break
@@ -2388,6 +2457,7 @@ if (!text) throw `Example : ${prefix + command} Dika, 7, 7, 2005`
 let [nama, tgl, bln, thn] = text.split`,`
 let anu = await primbon.potensi_keberuntungan(nama, tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Lahir :* ${anu.message.tgl_lahir}\n⭔ *Hasil :* ${anu.message.result}`, m)
 }
 break
@@ -2396,6 +2466,7 @@ if (!text) throw `Example : ${prefix + command} 12, 1, 2022`
 let [tgl, bln, thn] = text.split`,`
 let anu = await primbon.primbon_memancing_ikan(tgl, bln, thn)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Tanggal :* ${anu.message.tgl_memancing}\n⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2404,6 +2475,7 @@ if (!text) throw `Example : ${prefix + command} 12, 1, 2022, 28\n\nNote : ${pref
 let [tgl, bln, thn, siklus] = text.split`,`
 let anu = await primbon.masa_subur(tgl, bln, thn, siklus)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Hasil :* ${anu.message.result}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2439,6 +2511,7 @@ let zodiac = await getZodiac(birth[1], birth[2])
 
 let anu = await primbon.zodiak(zodiac)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Zodiak :* ${anu.message.zodiak}\n⭔ *Nomor :* ${anu.message.nomor_keberuntungan}\n⭔ *Aroma :* ${anu.message.aroma_keberuntungan}\n⭔ *Planet :* ${anu.message.planet_yang_mengitari}\n⭔ *Bunga :* ${anu.message.bunga_keberuntungan}\n⭔ *Warna :* ${anu.message.warna_keberuntungan}\n⭔ *Batu :* ${anu.message.batu_keberuntungan}\n⭔ *Elemen :* ${anu.message.elemen_keberuntungan}\n⭔ *Pasangan Zodiak :* ${anu.message.pasangan_zodiak}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
 }
 break
@@ -2446,6 +2519,7 @@ case 'shio': {
 if (!text) throw `Example : ${prefix + command} tikus\n\nNote : For Detail https://primbon.com/shio.htm`
 let anu = await primbon.shio(text)
 if (anu.status == false) return m.reply(anu.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, `⭔ *Hasil :* ${anu.message}`, m)
 }
 break
@@ -2457,6 +2531,7 @@ if (type.toLowerCase() == 'ff') {
 if (!id) throw `No Query id, Example ${prefix + command} ff 552992060`
 let anu = await fetchJson(api('zenz', '/api/nickff', { apikey: global.APIKeys[global.APIs['zenz']], query: id }))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`ID : ${anu.result.gameId}\nUsername : ${anu.result.userName}`)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'ml') {
@@ -2464,39 +2539,46 @@ if (!id) throw `No Query id, Example : ${prefix + command} ml 214885010 2253`
 if (!zone) throw `No Query id, Example : ${prefix + command} ml 214885010 2253`
 let anu = await fetchJson(api('zenz', '/api/nickml', { apikey: global.APIKeys[global.APIs['zenz']], query: id, query2: zone }))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`ID : ${anu.result.gameId}\nZone : ${anu.result.zoneId}\nUsername : ${anu.result.userName}`)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'aov') {
 if (!id) throw `No Query id, Example ${prefix + command} aov 293306941441181`
 let anu = await fetchJson(api('zenz', '/api/nickaov', { apikey: global.APIKeys[global.APIs['zenz']], query: id }))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`ID : ${anu.result.gameId}\nUsername : ${anu.result.userName}`)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'cod') {
 if (!id) throw `No Query id, Example ${prefix + command} cod 6290150021186841472`
 let anu = await fetchJson(api('zenz', '/api/nickcod', { apikey: global.APIKeys[global.APIs['zenz']], query: id }))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`ID : ${anu.result.gameId}\nUsername : ${anu.result.userName}`)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'pb') {
 if (!id) throw `No Query id, Example ${prefix + command} pb riio46`
 let anu = await fetchJson(api('zenz', '/api/nickpb', { apikey: global.APIKeys[global.APIs['zenz']], query: id }))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`ID : ${anu.result.gameId}\nUsername : ${anu.result.userName}`)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'ig') {
 if (!id) throw `No Query username, Example : ${prefix + command} ig cak_haho`
 let { result: anu } = await fetchJson(api('zenz', '/api/stalker/ig', { username: id }, 'apikey'))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMedia(m.chat, anu.caption.profile_hd, '', `⭔ Full Name : ${anu.caption.full_name}\n⭔ User Name : ${anu.caption.user_name}\n⭔ ID ${anu.caption.user_id}\n⭔ Followers : ${anu.caption.followers}\n⭔ Following : ${anu.caption.following}\n⭔ Bussines : ${anu.caption.bussines}\n⭔ Profesional : ${anu.caption.profesional}\n⭔ Verified : ${anu.caption.verified}\n⭔ Private : ${anu.caption.private}\n⭔ Bio : ${anu.caption.biography}\n⭔ Bio Url : ${anu.caption.bio_url}`, m)
 db.data.users[m.sender].limit -= 1
 } else if (type.toLowerCase() == 'npm') {
 if (!id) throw `No Query username, Example : ${prefix + command} npm scrape-primbon`
 let { result: anu } = await fetchJson(api('zenz', '/api/stalker/npm', { query: id }, 'apikey'))
 if (anu.status == false) return m.reply(anu.result.message)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`⭔ Name : ${anu.name}\n⭔ Version : ${Object.keys(anu.versions)}\n⭔ Created : ${tanggal(anu.time.created)}\n⭔ Modified : ${tanggal(anu.time.modified)}\n⭔ Maintainers :\n ${anu.maintainers.map(v => `- ${v.name} : ${v.email}`).join('\n')}\n\n⭔ Description : ${anu.description}\n⭔ Homepage : ${anu.homepage}\n⭔ Keywords : ${anu.keywords}\n⭔ Author : ${anu.author.name}\n⭔ License : ${anu.license}\n⭔ Readme : ${anu.readme}`)
 db.data.users[m.sender].limit -= 1
 } else {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Example : ${prefix +command} type id\n\nList Type :\n1. ff (Free Fire)\n2. ml (Mobile Legends)\n3. aov (Arena Of Valor)\n4. cod (Call Of Duty)\n5. pb (point Blank)\n6. ig (Instagram)\n7. npm (https://npmjs.com)`)
 }
 }
@@ -2516,6 +2598,7 @@ footer: 'Press The Button Below',
 buttons: buttons,
 headerType: 5
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2534,6 +2617,7 @@ footer: 'Press The Button Below',
 buttons: buttons,
 headerType: 5
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2552,6 +2636,7 @@ buttons: buttons,
 headerType: 2
 }
 let msg = await hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: anu.result.audio }, mimetype: 'audio/mpeg'}, { quoted: msg })
 }
 break
@@ -2563,6 +2648,7 @@ let anu = await fetchJson(api('zenz', '/downloader/instagram2', { url: isUrl(tex
 for (let media of anu.data) hisoka.sendFileUrl(m.chat, media, `Download Url Instagram From ${isUrl(text)[0]}`, m)
 } else if (/\/stories\/([^\s&]+)/.test(isUrl(text)[0])) {
 let anu = await fetchJson(api('zenz', '/downloader/instastory', { url: isUrl(text)[0] }, 'apikey'))
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendFileUrl(m.chat, anu.media[0].url, `Download Url Instagram From ${isUrl(text)[0]}`, m)
 }
 }
@@ -2572,6 +2658,7 @@ if (!text) throw 'No Query Title'
 m.reply(mess.wait)
 let anu = await fetchJson(api('zenz', '/downloader/joox', { query: text }, 'apikey'))
 let msg = await hisoka.sendImage(m.chat, anu.result.img, `⭔ Title : ${anu.result.lagu}\n⭔ Album : ${anu.result.album}\n⭔ Singer : ${anu.result.penyanyi}\n⭔ Publish : ${anu.result.publish}\n⭔ Lirik :\n${anu.result.lirik.result}`, m)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: anu.result.mp4aLink }, mimetype: 'audio/mpeg', fileName: anu.result.lagu+'.m4a' }, { quoted: msg })
 }
 break
@@ -2580,6 +2667,7 @@ if (!text) throw 'No Query Title'
 m.reply(mess.wait)
 let anu = await fetchJson(api('zenz', '/downloader/soundcloud', { url: isUrl(text)[0] }, 'apikey'))
 let msg = await hisoka.sendImage(m.chat, anu.result.thumb, `⭔ Title : ${anu.result.title}\n⭔ Url : ${isUrl(text)[0]}`)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: anu.result.url }, mimetype: 'audio/mpeg', fileName: anu.result.title+'.m4a' }, { quoted: msg })
 }
 break
@@ -2597,6 +2685,7 @@ footer: 'Press The Button Below',
 buttons: buttons,
 headerType: 5
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2615,6 +2704,7 @@ buttons: buttons,
 headerType: 4
 }
 let msg = await hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: anu.result.audio } }, { quoted: msg })
 }
 break
@@ -2622,6 +2712,7 @@ case 'fbdl': case 'fb': case 'facebook': {
 if (!text) throw 'Masukkan Query Link!'
 m.reply(mess.wait)
 let anu = await fetchJson(api('zenz', '/api/downloader/facebook', { url: text }, 'apikey'))
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { video: { url: anu.result.url }, caption: `⭔ Title : ${anu.result.title}`}, { quoted: m })
 }
 break
@@ -2629,6 +2720,7 @@ case 'pindl': case 'pinterestdl': {
 if (!text) throw 'Masukkan Query Link!'
 m.reply(mess.wait)
 let anu = await fetchJson(api('zenz', '/api/downloader/pinterestdl', { url: text }, 'apikey'))
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { video: { url: anu.result }, caption: `Download From ${text}` }, { quoted: m })
 }
 break
@@ -2655,9 +2747,11 @@ footer: hisoka.user.name,
 buttons,
 headerType: 4
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 } else if (anu.type == 'image') {
 anu.media.map(async (url) => {
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url }, caption: `⭔ Title : ${anu.title}\n⭔ Author : ${anu.author.name}\n⭔ Like : ${anu.like}\n⭔ Caption : ${anu.caption}` }, { quoted: m })
 })
 }
@@ -2668,6 +2762,7 @@ if (!text) throw `Example : ${prefix + command} black rover`
 let { ringtone } = require('./lib/scraper')
 let anu = await ringtone(text)
 let result = anu[Math.floor(Math.random() * anu.length)]
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: result.audio }, fileName: result.title+'.mp3', mimetype: 'audio/mpeg' }, { quoted: m })
 }
 break
@@ -2675,23 +2770,29 @@ case 'iqra': {
 oh = `Example : ${prefix + command} 3\n\nIQRA Yang tersedia : 1,2,3,4,5,6`
 if (!text) throw oh
 yy = await getBuffer(`https://islamic-api-indonesia.herokuapp.com/api/data/pdf/iqra${text}`)
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, {document: yy, mimetype: 'application/pdf', fileName: `iqra${text}.pdf`}, {quoted:m}).catch ((err) => m.reply(oh))
 }
 break
 case 'juzamma': {
 if (args[0] === 'pdf') {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(mess.wait)
 hisoka.sendMessage(m.chat, {document: {url: 'https://fatiharridho.my.id/database/islam/juz-amma-arab-latin-indonesia.pdf'}, mimetype: 'application/pdf', fileName: 'juz-amma-arab-latin-indonesia.pdf'}, {quoted:m})
 } else if (args[0] === 'docx') {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(mess.wait)
 hisoka.sendMessage(m.chat, {document: {url: 'https://fatiharridho.my.id/database/islam/juz-amma-arab-latin-indonesia.docx'}, mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', fileName: 'juz-amma-arab-latin-indonesia.docx'}, {quoted:m})
 } else if (args[0] === 'pptx') {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(mess.wait)
 hisoka.sendMessage(m.chat, {document: {url: 'https://fatiharridho.my.id/database/islam/juz-amma-arab-latin-indonesia.pptx'}, mimetype: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', fileName: 'juz-amma-arab-latin-indonesia.pptx'}, {quoted:m})
 } else if (args[0] === 'xlsx') {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(mess.wait)
 hisoka.sendMessage(m.chat, {document: {url: 'https://fatiharridho.my.id/database/islam/juz-amma-arab-latin-indonesia.xlsx'}, mimetype: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', fileName: 'juz-amma-arab-latin-indonesia.xlsx'}, {quoted:m})
 } else {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Mau format apa ? Example : ${prefix + command} pdf
 
 Format yang tersedia : pdf, docx, pptx, xlsx`)
@@ -2726,12 +2827,14 @@ if (!args[1]) throw `Hadis yang ke berapa?\n\ncontoh:\n${prefix + command} musli
 try {
 let res = await fetchJson(`https://fatiharridho.herokuapp.com/api/islamic/hadits?list=${args[0]}`)
 let { number, arab, id } = res.result.find(v => v.number == args[1])
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`No. ${number}
 
 ${arab}
 
 ${id}`)
 } catch (e) {
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Hadis tidak ditemukan !`)
 }
 }
@@ -2745,7 +2848,9 @@ let txt = `*Arab* : ${res.result.data.text.arab}
 *Indonesia* : ${res.result.data.translation.id}
 
 ( Q.S ${res.result.data.surah.name.transliteration.id} : ${res.result.data.number.inSurah} )`
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(txt)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, {audio: { url: res.result.data.audio.primary }, mimetype: 'audio/mpeg'}, { quoted : m })
 }
 break
@@ -2760,10 +2865,11 @@ let txt = `「 *Tafsir Surah*  」
 *Panjang* : ${res.result.data.tafsir.id.long}
 
 ( Q.S ${res.result.data.surah.name.transliteration.id} : ${res.result.data.number.inSurah} )`
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(txt)
 }
 break
-   case 'bass': case 'blown': case 'deep': case 'earrape': case 'fast': case 'fat': case 'nightcore': case 'reverse': case 'robot': case 'slow': case 'smooth': case 'tupai':
+case 'bass': case 'blown': case 'deep': case 'earrape': case 'fast': case 'fat': case 'nightcore': case 'reverse': case 'robot': case 'slow': case 'smooth': case 'tupai':
 try {
 let set
 if (/bass/.test(command)) set = '-af equalizer=f=54:width_type=o:width=2:g=20'
@@ -2786,6 +2892,7 @@ exec(`ffmpeg -i ${media} ${set} ${ran}`, (err, stderr, stdout) => {
 fs.unlinkSync(media)
 if (err) return m.reply(err)
 let buff = fs.readFileSync(ran)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: buff, mimetype: 'audio/mpeg' }, { quoted : m })
 fs.unlinkSync(ran)
 })
@@ -2807,6 +2914,7 @@ creator: m.sender,
 at: + new Date,
 locked: false,
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Done!`)
 }
 break
@@ -2815,6 +2923,7 @@ let hash = m.quoted.fileSha256.toString('base64')
 if (!hash) throw `Tidak ada hash`
 if (global.db.data.sticker[hash] && global.db.data.sticker[hash].locked) throw 'You have no permission to delete this sticker command'  
 delete global.db.data.sticker[hash]
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Done!`)
 }
 break
@@ -2824,6 +2933,7 @@ let teks = `
 Info: *bold* hash is Locked
 ${Object.entries(global.db.data.sticker).map(([key, value], index) => `${index + 1}. ${value.locked ? `*${key}*` : key} : ${value.text}`).join('\n')}
 `.trim()
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendText(m.chat, teks, m, { mentions: Object.values(global.db.data.sticker).map(x => x.mentionedJid).reduce((a,b) => [...a, ...b], []) })
 }
 break
@@ -2834,6 +2944,7 @@ if (!m.quoted.fileSha256) throw 'SHA256 Hash Missing'
 let hash = m.quoted.fileSha256.toString('base64')
 if (!(hash in global.db.data.sticker)) throw 'Hash not found in database'
 global.db.data.sticker[hash].locked = !/^un/i.test(command)
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply('Done!')
 }
 break
@@ -2843,6 +2954,7 @@ if (!text) throw `Example : ${prefix + command} nama file`
 let msgs = global.db.data.database
 if (text.toLowerCase() in msgs) throw `'${text}' telah terdaftar di list pesan`
 msgs[text.toLowerCase()] = quoted.fakeObj
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Berhasil menambahkan pesan di list pesan sebagai '${text}'
 
 Akses dengan ${prefix}getmsg ${text}
@@ -2854,6 +2966,7 @@ case 'getmsg': {
 if (!text) throw `Example : ${prefix + command} file name\n\nLihat list pesan dengan ${prefix}listmsg`
 let msgs = global.db.data.database
 if (!(text.toLowerCase() in msgs)) throw `'${text}' tidak terdaftar di list pesan`
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.copyNForward(m.chat, msgs[text.toLowerCase()], true)
 }
 break
@@ -2864,6 +2977,7 @@ let teks = '「 LIST DATABASE 」\n\n'
 for (let i of seplit) {
 teks += `⬡ *Name :* ${i.nama}\n⬡ *Type :* ${getContentType(i.message).replace(/Message/i, '')}\n────────────────────────\n\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(teks)
 }
 break
@@ -2871,6 +2985,7 @@ case 'delmsg': case 'deletemsg': {
 let msgs = global.db.data.database
 if (!(text.toLowerCase() in msgs)) return m.reply(`'${text}' tidak terdaftar didalam list pesan`)
 delete msgs[text.toLowerCase()]
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`Berhasil menghapus '${text}' dari list pesan`)
 }
 break
@@ -2989,12 +3104,14 @@ break
 case 'public': {
 if (!isCreator) throw mess.owner
 hisoka.public = true
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply('Sukse Change To Public Usage')
 }
 break
 case 'self': {
 if (!isCreator) throw mess.owner
 hisoka.public = false
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply('Sukses Change To Self Usage')
 }
 break
@@ -3042,6 +3159,7 @@ ${cpus[0].model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times).map(type =>
 _CPU Core(s) Usage (${cpus.length} Core CPU)_
 ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times).map(type => `- *${(type + '*').padEnd(6)}: ${(100 * cpu.times[type] / cpu.total).toFixed(2)}%`).join('\n')}`).join('\n\n')}` : ''}
 `.trim()
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(respon)
 }
 break
@@ -3063,6 +3181,7 @@ if (stderr.trim()) m.reply(stderr)
 }
 break
 case 'owner': case 'creator': {
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendContact(m.chat, global.owner, m)
 }
 break
@@ -3076,6 +3195,7 @@ teks += `⭔ Link : ${i.link}\n`
 teks += `⭔ Developer : ${i.developer}\n`
 teks += `⭔ Link Developer : ${i.link_dev}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(teks)
 }
 break
@@ -3097,6 +3217,7 @@ let capt = `⭔ Title: ${judul}
 ⭔ Battery: ${batrai}
 ⭔ Battery Brand: ${merek_batre}
 ⭔ Detail: ${detail}`
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, thumb, capt, m)
 }
 break
@@ -3109,6 +3230,7 @@ capt += `⭔ Title: ${i.title}\n`
 capt += `⭔ Thumbnail: ${i.thumb}\n`
 capt += `⭔ Url: ${i.url}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, res.result[0].thumb, capt, m)
 }
 break
@@ -3120,6 +3242,7 @@ capt += `⭔ Title: ${i.title}\n`
 capt += `⭔ Url: ${i.url}\n`
 capt += `⭔ Img Url: ${i.img}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, res.result[0].img, capt, m)
 }
 break
@@ -3134,6 +3257,7 @@ capt += `⭔ Thumbnail: ${i.community_thumb}\n`
 capt += `⭔ Description: ${i.community_desc}\n`
 capt += `⭔ Member Count: ${i.member_count}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, 'https://'+res.result[0].community_thumb, capt, m)
 }
 break
@@ -3149,6 +3273,7 @@ capt += `⭔ Bab: ${bab}\n`
 capt += `⭔ Waktu: ${waktu}\n`
 capt += `⭔ Url: ${url}\n`
 capt += `⭔ Deskripsi: ${description}`
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, thumb, capt, m)
 }
 break
@@ -3163,6 +3288,7 @@ capt += `⭔ Creator: ${i.creator}\n`
 capt += `⭔ Genre: ${i.genre}\n`
 capt += `⭔ Url: ${i.url}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(capt)
 }
 break
@@ -3177,6 +3303,7 @@ capt += `⭔ Genre: ${i.genre}\n`
 capt += `⭔ Url: ${i.url}\n`
 capt += `⭔ Thumbnail Url: ${i.thumbnail}\n\n──────────────────────\n`
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendImage(m.chat, res.result[0].thumbnail, capt, m)
 }
 break
@@ -3231,6 +3358,7 @@ rows: [
 ]
 },
 ]
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendListMsg(m.chat, `Please select the menu you want to change!`, hisoka.user.name, `Hello Owner !`, `Click Here`, sections, m)
 }
 }
