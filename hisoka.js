@@ -143,13 +143,6 @@ setting.status = new Date() * 1
 }
 }
 
-// Auto ketik
-if (command) {
-let list = ['composing','recording']
-let hyzercode = list[Math.floor(list.length * Math.random())]
-await hisoka.sendPresenceUpdate(hyzercode, m.chat)
-}
-
 // Ucapan
 const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')
 if(time2 < "23:59:00"){
@@ -489,12 +482,6 @@ ${ucapanWaktu} ${m.pushName}
 ▸ Nama:  ${m.pushName} 
 ▸ Api: wa.me/${m.sender}
 ▸ Status: Free
-
-_Harap dipahami, bot ini menggunakan program_
-_beta multi device whatsapp._
-_jika kamu menemukan semacam bug/error saat_
-_penggunaan bot. Harap lapor owner bot_
-_agar segera diperbaiki, terima kasih._
 ${readmore}
 
 *GROUP MENU*
@@ -826,7 +813,8 @@ displayText: 'Script',
 id: 'sc'
 }
 }]
- let setbot = db.data.settings[botNumber]
+await hisoka.sendPresenceUpdate('composing', m.chat)
+let setbot = db.data.settings[botNumber]
 if (setbot.templateImage) {
 hisoka.send5ButImg(m.chat, anu, hisoka.user.name, global.thumb, btn, global.thumb)
 } else if (setbot.templateGif) {
@@ -844,10 +832,12 @@ case 'afk': {
 let user = global.db.data.users[m.sender]
 user.afkTime = + new Date
 user.afkReason = text
+await hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(`${m.pushName} Telah Afk${text ? ': ' + text : ''}`)
 }
 break
 case 'ttc': case 'ttt': case 'tictactoe': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 let TicTacToe = require("./lib/tictactoe")
 this.game = this.game ? this.game : {}
 if (Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw 'Kamu masih didalam game'
@@ -898,6 +888,7 @@ this.game[room.id] = room
 }
 break
 case 'delttc': case 'delttt': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 this.game = this.game ? this.game : {}
 try {
 if (this.game) {
@@ -913,6 +904,7 @@ m.reply('rusak')
 break
 case 'suitpvp': case 'suit': {
 this.suit = this.suit ? this.suit : {}
+await hisoka.sendPresenceUpdate('composing', m.chat)
 let poin = 10
 let poin_lose = 10
 let timeout = 60000
@@ -940,16 +932,19 @@ delete this.suit[id]
 }
 break
 case 'donasi': case 'sewabot': case 'sewa': case 'buypremium': case 'donate': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/74fd634010128be37972c.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\n Bot Rental Prices\n• 13k Per Group via E-Walet 1 Month\n• 18k via pulsa 1 Month\n\n Premium Price Bot\n• 8k per User 1 bulan\n\nPayment can be via Paypal/link aja/pulsa\n\nFor more details, you can chat with the owner\nhttps://wa.me/6287892711054 (Owner)\n\nDonate For Me : \n\n• Paypal : https://www.paypal.me/Cakhaho\n• Saweria : https://saweria.co/DikaArdnt` }, { quoted: m })
 }
 break
 case 'sc': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply('Base : https://github.com/DikaArdnt/Hisoka-Morou\n\nRecode : By Me 🐤')
 }
 break
 case 'chat': {
 if (!isCreator) throw mess.owner
 if (!q) throw 'Option : 1. mute\n2. unmute\n3. archive\n4. unarchive\n5. read\n6. unread\n7. delete'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 if (args[0] === 'mute') {
 hisoka.chatModify({ mute: 'Infinity' }, m.chat, []).then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 } else if (args[0] === 'unmute') {
@@ -968,6 +963,7 @@ hisoka.chatModify({ clear: { message: { id: m.quoted.id, fromMe: true }} }, m.ch
 }
 break
 case 'family100': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 if ('family100'+m.chat in _family100) {
 m.reply('Masih Ada Sesi Yang Belum Diselesaikan!')
 throw false
@@ -988,10 +984,12 @@ case 'halah': case 'hilih': case 'huluh': case 'heleh': case 'holoh':
 if (!m.quoted && !text) throw `Kirim/reply text dengan caption ${prefix + command}`
 ter = command[1].toLowerCase()
 tex = m.quoted ? m.quoted.text ? m.quoted.text : q ? q : m.text : q ? q : m.text
+await hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(tex.replace(/[aiueo]/g, ter).replace(/[AIUEO]/g, ter.toUpperCase()))
 break
 case 'tebak': {
 if (!text) throw `Example : ${prefix + command} lagu\n\nOption : \n1. lagu\n2. gambar\n3. kata\n4. kalimat\n5. lirik\n6.lontong`
+await hisoka.sendPresenceUpdate('composing', m.chat)
 if (args[0] === "lagu") {
 if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
 let anu = await fetchJson('https://fatiharridho.github.io/tebaklagu.json')
@@ -1077,6 +1075,7 @@ delete caklontong_desk[m.sender.split('@')[0]]
 }
 break
 case 'kuismath': case 'math': {
+await hisoka.sendPresenceUpdate('composing', m.chat)
 if (kuismath.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
 let { genMath, modes } = require('./src/math')
 if (!text) throw `Mode: ${Object.keys(modes).join(' | ')}\nContoh penggunaan: ${prefix}math medium`
@@ -1104,6 +1103,7 @@ let ments = [me, jodoh]
 let buttons = [
 { buttonId: 'jodohku', buttonText: { displayText: 'Jodohku' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, jawab, hisoka.user.name, m, {mentions: ments})
 }
 break
@@ -1119,6 +1119,7 @@ let menst = [orang, jodoh]
 let buttons = [
 { buttonId: 'jadian', buttonText: { displayText: 'Jodohku' }, type: 1 }
 ]
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.sendButtonText(m.chat, buttons, jawab, hisoka.user.name, m, {mentions: menst})
 }
 break
@@ -1152,6 +1153,7 @@ case 'setexif': {
    if (!text) throw `Example : ${prefix + command} packname|author`
   global.packname = text.split("|")[0]
   global.author = text.split("|")[1]
+  await hisoka.sendPresenceUpdate('composing', m.chat)
   m.reply(`Exif berhasil diubah menjadi\n\n⭔ Packname : ${global.packname}\n⭔ Author : ${global.author}`)
 }
 break
@@ -1160,6 +1162,7 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupParticipantsUpdate(m.chat, [users], 'remove').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 }
 break
@@ -1168,6 +1171,7 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupParticipantsUpdate(m.chat, [users], 'add').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 }
 break
@@ -1176,6 +1180,7 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupParticipantsUpdate(m.chat, [users], 'promote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 }
 break
@@ -1184,6 +1189,7 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupParticipantsUpdate(m.chat, [users], 'demote').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
 }
 break
@@ -1204,34 +1210,38 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 if (!text) throw 'Text ?'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupUpdateSubject(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
 }
 break
-  case 'setdesc': case 'setdesk': {
+case 'setdesc': case 'setdesk': {
 if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 if (!text) throw 'Text ?'
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.groupUpdateDescription(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
 }
 break
-  case 'setppbot': {
+ case 'setppbot': {
 if (!isCreator) throw mess.owner
 if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 let media = await hisoka.downloadAndSaveMediaMessage(quoted)
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
 m.reply(mess.success)
 }
 break
-   case 'setppgroup': case 'setppgrup': case 'setppgc': {
+case 'setppgroup': case 'setppgrup': case 'setppgc': {
 if (!m.isGroup) throw mess.group
 if (!isAdmins) throw mess.admin
 if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 let media = await hisoka.downloadAndSaveMediaMessage(quoted)
+await hisoka.sendPresenceUpdate('composing', m.chat)
 await hisoka.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
 m.reply(mess.success)
 }
@@ -1246,6 +1256,7 @@ let teks = `══✪〘 *👥 Tag All* 〙✪══
 for (let mem of participants) {
 teks += `⭔ @${mem.id.split('@')[0]}\n`
 }
+await hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { text: teks, mentions: participants.map(a => a.id) }, { quoted: m })
 }
 break
@@ -1253,7 +1264,8 @@ case 'hidetag': {
 if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
-hisoka.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
+await hisoka.sendPresenceUpdate('composing', m.chat)
+await hisoka.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
 }
 break
 case 'totag': {
@@ -1261,6 +1273,7 @@ if (!m.isGroup) throw mess.group
 if (!isBotAdmins) throw mess.botAdmin
 if (!isAdmins) throw mess.admin
 if (!m.quoted) throw `Reply pesan dengan caption ${prefix + command}`
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
 }
 break
@@ -1274,6 +1287,7 @@ let teks = `Srtle Text From ${text}\n\n`
 for (let i of anu) {
 teks += `⭔ *${i.name}* : ${i.result}\n\n`
 }
+await hisoka.sendPresenceUpdate('composing', m.chat)
 m.reply(teks)
 }
 break
@@ -1316,6 +1330,7 @@ footer: hisoka.user.name,
 buttons: buttonsVote,
 headerType: 1
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessageVote)
 }
 break
@@ -1582,6 +1597,7 @@ thumbnail: fs.readFileSync('./hyzer.jpg'),
 sourceUrl: "https://chat.whatsapp.com/IxBejqgYlXKENKPJsF7EOP"
 }}
 }
+hisoka.sendPresenceUpdate('composing', m.chat)
 hisoka.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
@@ -2011,7 +2027,7 @@ if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFM
 let quality = args[1] ? args[1] : '128kbps'
 let media = await yta(text, quality)
 if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
-hisoka.sendImage(m.chat, media.thumb, `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '128kbps'}`, m)
+hisoka.sendPresenceUpdate('recording', m.chat)
 hisoka.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, {quoted:m})
 }
 break
